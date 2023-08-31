@@ -18,13 +18,15 @@ def generuj_tajne_cislo(delka: int) -> str:
     - string : Tajné číslo vygenerované jako řetězec, které je výhodnější pro další kontrolu ve hře. 
     """
     generovane_cislice = []
+    volne_cislice = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     while len(generovane_cislice) != delka_cisla:
-        cislice = str(random.randrange(10))
-        if (cislice == "0" and generovane_cislice == []) or cislice in generovane_cislice:
+        cislice = random.choice(volne_cislice)
+        if (cislice == "0" and generovane_cislice == []):
             continue
         else:
             generovane_cislice.append(cislice)
-
+            volne_cislice.remove(cislice)
+            
     tajne_cislo = "".join(generovane_cislice)
     return tajne_cislo
 
@@ -38,35 +40,35 @@ def hodnot_vykon_hrace(pocet: int) -> str:
     Návratová hodnota:
     - str: Slovní ohodnocení výkonu hráče.
     """
-    hodnoceni = {(1,):"unbelievable. You were born under a lucky star", (2, 3):"brilliant",
-                 (4, 5):"amazing", (6, 7):"average", (8, 9):"not so good",
-                 (10, 11):"poor", (12," a víc"):"useless"}
+    hodnoceni = {"unbelievable. You were born under a lucky star":(1,), "brilliant":(2, 3),
+                 "amazing":(4, 5), "average": (6, 7), "not so good":(8, 9),
+                 "poor": (10, 11)}
     if pocitani_poctu_pokusu[0] > 11:
-        vysledek = hodnoceni[(12," a víc")]
+        vysledek = "useless"
     else:
         for klic in hodnoceni:
-            if pocet in klic:
-                (vysledek := hodnoceni[klic])
-    
-        return print(f"That's {vysledek}.".center(61))
+            if pocet in hodnoceni[klic]:
+                (vysledek := klic)
+            
+        print(f"That's {vysledek}.".center(61))
 
 # definování funkce, která bude hlídat gramaticky správné tisknutí anglických slov v závislosti na množném či jednotném číslu    
-def gramatika(promenna: list) -> str:
+def gramatika(english_word: list) -> str:
     """
     Popis:
     - funkce, která pro proměnné, jejichž číselná hodnota se vypisuje v textu, pohlídá, aby se slovo za číselnou hodnotou
       vypsalo ve správné gramatické podobě     
     Parametry:
-    - promenna (list): proměnná, jejíž hodnota je seznam, kdy na indexu[0] je číslo (int), které se může měnit podle průběhu hry,
+    - english_word (list): proměnná, jejíž hodnota je seznam, kdy na indexu[0] je číslo (int), které se může měnit podle průběhu hry,
       na indexu[1] je správná gramatická podoba slova v jednotném čísle a na posledním indexu je správná gramatická podoba slova 
       v množném čísle
     Návratová hodnota:
     - str: Správně vypsaná podoba slova, aby v textu nebyla grmatická chyba.
     """
-    if promenna[0] == 1:
-        return promenna[1]
+    if english_word[0] == 1:
+        return english_word[1]
     else:
-        return promenna[2]
+        return english_word[2]
     
 delka_cisla = 4 # volitelná hodnota, je možnost zadat jinou délku hledaného čísla (maximálně 10 číslic)
 oddelovac = "-" * 61
@@ -100,6 +102,10 @@ while (vstup := input(">>> ")) != tajne_cislo:
         print(f"Tvůj vstup obsahuje duplicitní hodnoty číslic, zkus to znovu.")
         print(oddelovac)
         continue
+    elif vstup[0] == "0":
+        print(f"Tvůj vstup by neměl začínat nulou, zkus to znovu.")
+        print(oddelovac)
+        continue
     else:
         int(vstup)
   
@@ -111,7 +117,7 @@ while (vstup := input(">>> ")) != tajne_cislo:
     bulls = [0, "bull", "bulls"]
     cows = [0, "cow", "cows"]
 
-    for pozice in range(4):
+    for pozice in range(delka_cisla):
         if vstup[pozice] == tajne_cislo[pozice]:
             bulls[0] += 1
         elif vstup[pozice] in tajne_cislo:
@@ -143,5 +149,5 @@ Your total time of guessing took {minutes[0]} {gramatika(minutes)} and {seconds[
 )
 
 # slovní hodnocení hráče podle počtu pokusů pomocí funkce 'hodnot_vykon_hrace(pocet)'
-vysledek = hodnot_vykon_hrace(pocitani_poctu_pokusu[0])
+hodnot_vykon_hrace(pocitani_poctu_pokusu[0])
 print(oddelovac)
