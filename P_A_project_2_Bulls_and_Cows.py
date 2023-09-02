@@ -6,6 +6,7 @@ discord: Wassenego#1875
 """
 import random
 import time
+import sys
 
 # definování funkce ke generování hledaného čísla tak, aby splňovalo všechny podmínky.
 def generuj_tajne_cislo(delka: int) -> str:
@@ -69,85 +70,106 @@ def gramatika(english_word: list) -> str:
         return english_word[1]
     else:
         return english_word[2]
-    
-delka_cisla = 4 # volitelná hodnota, je možnost zadat jinou délku hledaného čísla (maximálně 10 číslic)
-oddelovac = "-" * 61
 
-tajne_cislo = generuj_tajne_cislo(delka_cisla)
+def control_arguments(args):
+    """
+    Zkontroluj zadaný argument vepsaný do příkazové řádky. Mělo by se jednat o číslo mezi 2 až 10.
+    """ 
+    if len(sys.argv) != 2:
+        print(f"I need 1 argument for running this game: 'Choose the lenght of secret code!'")
+        sys.exit(1)
+    elif not sys.argv[1].isdigit():
+        print(f"Your choice is not a number!")
+        sys.exit(1)
+    elif int(sys.argv[1]) < 2 and int(sys.argv[1]) > 10:
+        print(f"Your number is out of range (2-10).")
+        sys.exit(1)
+    else:
+        print(f"You chose {sys.argv[1]}-digit secret code.") 
+        
+if __name__ == "__main__":
+    control_arguments(sys.argv)
 
-# jde si vytisknout hledané číslo pro kontrolu
-# print(tajne_cislo) 
+    delka_cisla = int(sys.argv[1]) # volitelná hodnota, je možnost zadat jinou délku hledaného čísla (maximálně 10 číslic)
 
-uvod = f"""\
-I've generated a random {delka_cisla} digit number for you.
+    oddelovac = "-" * 61
+
+    tajne_cislo = generuj_tajne_cislo(delka_cisla)
+
+    # jde si vytisknout hledané číslo pro kontrolu
+    # print(tajne_cislo) 
+
+    uvod = f"""\
+I've generated a random {delka_cisla}-digit number for you.
 Let's play a 'Bulls and Cows' game.\
 """
-print("Hi there!", oddelovac, uvod, oddelovac, "Enter a number:", oddelovac,sep="\n")
+    print("Hi there!", oddelovac, uvod, oddelovac, "Enter a number:", oddelovac,sep="\n")
 
-pocitani_poctu_pokusu = [1, "attempt", "attempts"]
-zacatek_hry = time.time() # spuštění stopek.
+    pocitani_poctu_pokusu = [1, "attempt", "attempts"]
+    zacatek_hry = time.time() # spuštění stopek.
 
 
-#  ověření, zda je hráčem zadaná hodnota v mezích pravidel
-    # číslo musí mít délku, která je definovaná na začátku kódu a zmíněná v úvodním uvítání hráče
-    # nesmí začínat nulou a obsahovat jiné znaky než číslice
-    # číslo nesmí obsahovat duplicitní číslice
+    #  ověření, zda je hráčem zadaná hodnota v mezích pravidel
+        # číslo musí mít délku, která je definovaná na začátku kódu a zmíněná v úvodním uvítání hráče
+        # nesmí začínat nulou a obsahovat jiné znaky než číslice
+        # číslo nesmí obsahovat duplicitní číslice
 
-while (vstup := input(">>> ")) != tajne_cislo:
-    if not vstup.isdigit() or len(vstup) != delka_cisla:
-        print(f"Tvůj vstup neobsahuje {delka_cisla}-místné číslo, zkus to znovu.")
-        print(oddelovac)
-        continue
-    elif len(set(vstup)) < delka_cisla:
-        print(f"Tvůj vstup obsahuje duplicitní hodnoty číslic, zkus to znovu.")
-        print(oddelovac)
-        continue
-    elif vstup[0] == "0":
-        print(f"Tvůj vstup by neměl začínat nulou, zkus to znovu.")
-        print(oddelovac)
-        continue
-    else:
-        int(vstup)
-  
-    # je otázkou, zda se má nesprávně zadaná hodnota počítat do počtu pokusů. Rozhodl jsem se, že ji počítat nebudu,
-    # jelikož hráč nedostane žádnou nápovědu a mohl se jen překlepnout. Pokud by se nesprávné zadání mělo počítat,
-    # přesunulo by se počítání hned za úvodní řádek smyčky s podmínkou
-
-    # ověřování hráčem zadaného čísla 
-    bulls = [0, "bull", "bulls"]
-    cows = [0, "cow", "cows"]
-
-    for pozice in range(delka_cisla):
-        if vstup[pozice] == tajne_cislo[pozice]:
-            bulls[0] += 1
-        elif vstup[pozice] in tajne_cislo:
-            cows[0] += 1
-        else:
+    while (vstup := input(">>> ")) != tajne_cislo:
+        if not vstup.isdigit() or len(vstup) != delka_cisla:
+            print(f"Your entry doesn't include {delka_cisla}-digit number, try again.")
+            print(oddelovac)
             continue
+        elif len(set(vstup)) < delka_cisla:
+            print(f"Your entry includes duplicit values of digits, try again.")
+            print(oddelovac)
+            continue
+        elif vstup[0] == "0":
+            print(f"Your entry cannot start with zero, try again.")
+            print(oddelovac)
+            continue
+        else:
+            int(vstup)
+    
+        # je otázkou, zda se má nesprávně zadaná hodnota počítat do počtu pokusů. Rozhodl jsem se, že ji počítat nebudu,
+        # jelikož hráč nedostane žádnou nápovědu a mohl se jen překlepnout. Pokud by se nesprávné zadání mělo počítat,
+        # přesunulo by se počítání hned za úvodní řádek smyčky s podmínkou
 
-    pocitani_poctu_pokusu[0] += 1
+        # ověřování hráčem zadaného čísla 
+        bulls = [0, "bull", "bulls"]
+        cows = [0, "cow", "cows"]
 
-    # tisknutí nápovědy hráči 
-    print(f"{bulls[0]} {gramatika(bulls)}, {cows[0]} {gramatika(cows)}")
-    print(oddelovac)
+        for pozice in range(delka_cisla):
+            if vstup[pozice] == tajne_cislo[pozice]:
+                bulls[0] += 1
+            elif vstup[pozice] in tajne_cislo:
+                cows[0] += 1
+            else:
+                continue
 
-# ukončení hry po uhádnutí hledaného čísla
-else:
-    # zastavení stopek a příprava pro tisk 
-    konec_hry = time.time()
-    doba_hadani = int(konec_hry - zacatek_hry)
-    minutes = [0, "minute", "minutes"]
-    minutes[0] += doba_hadani // 60
-    seconds = [0, "second", "seconds"]
-    seconds[0] += doba_hadani % 60
+        pocitani_poctu_pokusu[0] += 1
 
-# tisk vyhodnocení počtu pokusů a doby hádání
-    print(f"""\
+        # tisknutí nápovědy hráči 
+        print(f"{bulls[0]} {gramatika(bulls)}, {cows[0]} {gramatika(cows)}")
+        print(oddelovac)
+
+    # ukončení hry po uhádnutí hledaného čísla
+    else:
+        # zastavení stopek a příprava pro tisk 
+        konec_hry = time.time()
+        doba_hadani = int(konec_hry - zacatek_hry)
+        minutes = [0, "minute", "minutes"]
+        minutes[0] += doba_hadani // 60
+        seconds = [0, "second", "seconds"]
+        seconds[0] += doba_hadani % 60
+
+    # tisk vyhodnocení počtu pokusů a doby hádání
+        print(f"""\
+{oddelovac}              
 Correct, you've guessed the right number in {pocitani_poctu_pokusu[0]} {gramatika(pocitani_poctu_pokusu)}!
 Your total time of guessing took {minutes[0]} {gramatika(minutes)} and {seconds[0]} {gramatika(seconds)}.
 """
 )
 
-# slovní hodnocení hráče podle počtu pokusů pomocí funkce 'hodnot_vykon_hrace(pocet)'
-hodnot_vykon_hrace(pocitani_poctu_pokusu[0])
-print(oddelovac)
+    # slovní hodnocení hráče podle počtu pokusů pomocí funkce 'hodnot_vykon_hrace(pocet)'
+    hodnot_vykon_hrace(pocitani_poctu_pokusu[0])
+    print(oddelovac)
