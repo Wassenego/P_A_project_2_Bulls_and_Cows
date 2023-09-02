@@ -3,33 +3,34 @@ Python Academy project 2 - Bulls and Cows - druhý projekt na Python akademii na
 
 ## Popis projektu
 V tomto projektu jsem měli za úkol vytvořit hru Bulls and Cows, v Česku známější jako Logik, při které se hráč snaží pomocí nápovědy uhodnout správnou kombinaci čísel. 
-
-*(Oproti původnímu pevně danému počtu hádaných číslic chci ještě program upravit tak, aby si hráč může zvolit, kolikati-ciferný kód bude hádat v rozmezí 2-10.)*
+Oproti původnímu požadovanému 4-místnému kódu jsem program upravil tak, aby si hráč mohl zvolit, kolikaticiferný kód bude hádat - rozmezí 2-10.
 
 ## Instalace knihoven
 Pro hru byly použity jen built-in knihovny, nebylo potřeba tvořit virtuální prostředí ani soubour requirements.txt
 
 ## Spuštění projektu
-Spuštění projektu lze bez nutnosti vkládaní argumentů.
+Spuštění projektu `main.py` v rámci příkazového řádku požaduje jeden povinný argument.
+```python
+python main.py <volena-delka-tajneho-cisla>
+```
 
 ## Program obsahuje
-- vytvoření tajného 4-místného čísla (číslice musí být unikátní a kód nesmí začínat 0). *(Počet hádaných čísel se v další verzi bude dát volit.)*
+- vytvoření tajného x-místného čísla (číslice musí být unikátní a kód nesmí začínat 0). 
 
 - pozdravení užitele a vypsání úvodního textu
     ```
     Hi there!
     ------------------------------------------------
-    I've generated a random 4 digit number for you.
+    I've generated a random 4-digit number for you.
     Let's play a 'Bulls and Cows' game.
     ------------------------------------------------
     ```
-- žádost o vložení prvního 4-místného čísla. Program hráče upozorní:
-     - pokud zadá číslo kratší nebo delší než 4 číslice, příp. obsahovat nečíselné znaky.
-    - pokud bude obsahovat duplicity.
+- žádost o vložení prvního x-místného čísla. Program hráče upozorní:
+    - pokud zadané číslo bude kratší nebo delší než zvolený počet číslic, příp. obsahovat nečíselné znaky.
+    - pokud bude obsahovat duplicitní číslice.
     - pokud bude začínat nulou.
 
-
-- vyhodnocení tipu uživatele po každém hádání. Vypsání počtu bull/ bulls (pokud uživatel uhodne jak číslo, tak jeho umístění), příp. cows/ cows (pokud uživatel uhodne pouze číslo, ale ne jeho umístění). Vrácené ohodnocení bere ohled na jednotné a množné číslo ve výstupu.
+- vyhodnocení tipu uživatele po každém hádání. Vypsání počtu bull/ bulls (pokud uživatel uhodne jak číslo, tak jeho umístění), příp. cow/ cows (pokud uživatel uhodne pouze číslo, ale ne jeho umístění). Vrácené ohodnocení bere ohled na jednotné a množné číslo ve výstupu.
     ```
     >>> 1358
     1 bull, 1 cow
